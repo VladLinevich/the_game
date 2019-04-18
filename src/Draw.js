@@ -1,22 +1,35 @@
 class Draw {
 
-    constructor(count = 10){
-        this.count = 10;
+    constructor(count = 10, mainElementId = 'root'){
+        this.count = count;
+        this.mainElementId = mainElementId;
     }
 
-    drawCell(){
-        const cell = document.createElement('div');
-        cell.setAttribute('class', 'cell')
-        return cell
-    }
-
-    drawRow(innerElement){
-        const row = document.createElement('div');
-        
+    drawElement(tag, className) {
+        const element = document.createElement(tag);
+        element.setAttribute('class', className)
+        return element
     }
 
     draw(){
-        console.log(this.drawCell())
+        let root = document.getElementById(this.mainElementId);
+
+        for(let i = 0; i < this.count; i++){
+            let row =  this.drawElement('div', 'row')
+            
+            for(let i = 0; i < this.count; i++) {
+                row.appendChild(this.drawElement('span', 'ceil'))
+            }
+           
+            root.appendChild(row)
+        }
+
+        root.addEventListener('click', function(event){
+            console.log(event.target)
+            event.target.setAttribute('class', 'active ceil')
+        }, false)
+
+        console.log(root);
     }
 
 }

@@ -6,3 +6,4 @@ import Draw from './Draw';
 const draw = new Draw();
 
 draw.draw()
+

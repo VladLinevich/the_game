@@ -1,0 +1,13 @@
+.ceil {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+}
+
+.ceil.active{
+    background-color: rgb(212, 84, 41);
+}
+
+.row {
+    display: flex;
+}
