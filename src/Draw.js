@@ -12,24 +12,31 @@ class Draw {
     }
 
     draw(){
-        let root = document.getElementById(this.mainElementId);
+        const root = document.getElementById(this.mainElementId);
 
-        for(let i = 0; i < this.count; i++){
-            let row =  this.drawElement('div', 'row')
-            
-            for(let i = 0; i < this.count; i++) {
-                row.appendChild(this.drawElement('span', 'ceil'))
+        for(let rowCount = 0; rowCount < this.count; rowCount++){
+            const row = document.createElement('div');
+            row.setAttribute('class', 'row')    
+
+            for(let ceilCount = 0; ceilCount < this.count; ceilCount++) {
+                const ceil = document.createElement('span');
+                ceil.setAttribute('class', 'ceil')   
+                row.appendChild(ceil)
             }
            
             root.appendChild(row)
         }
 
+        const ceils = [].slice.call(document.getElementsByClassName('ceil'))
+
+        ceils.map((ceil, index) => ceil.setAttribute('id', index))
+
         root.addEventListener('click', function(event){
-            console.log(event.target)
-            event.target.setAttribute('class', 'active ceil')
+            if(event.target.className.includes('row')) return false
+            console.dir(event.target.id)
+            event.target.classList.add('active')
         }, false)
 
-        console.log(root);
     }
 
 }
