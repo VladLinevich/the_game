@@ -1,11 +1,15 @@
 .ceil {
     width: 30px;
     height: 30px;
-    border: 1px solid black;
+    border: 1px solid rgb(226, 226, 226);
 }
 
 .ceil.active{
-    background-color: rgb(212, 84, 41);
+    background-color: rgba(212, 84, 41, 0.371);
+}
+
+.ceil.disactive {
+    background-color: rgba(41, 144, 212, 0.371);
 }
 
 .row {

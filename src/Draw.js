@@ -1,14 +1,28 @@
 class Draw {
 
-    constructor(count = 10, mainElementId = 'root'){
+    constructor(count = 3, mainElementId = 'root'){
         this.count = count;
         this.mainElementId = mainElementId;
+        this.emptyCeils = [];
     }
 
     drawElement(tag, className) {
         const element = document.createElement(tag);
         element.setAttribute('class', className)
         return element
+    }
+
+    generateRandomNumber(maxNumber){
+        return Math.floor(Math.random() * (maxNumber + 1));
+    }
+
+    find(arr){
+        let num = this.generateRandomNumber(arr.length);
+        console.log(num)
+        return {
+            elementId: num,
+            arr: arr.filter(id => id != num)
+        }
     }
 
     draw(){
@@ -28,12 +42,35 @@ class Draw {
         }
 
         const ceils = [].slice.call(document.getElementsByClassName('ceil'))
+        ceils.map((ceil, index) => {
+            ceil.setAttribute('id', index);
+            this.emptyCeils.push(index)
+        })
 
-        ceils.map((ceil, index) => ceil.setAttribute('id', index))
+        console.log(this.emptyCeils)
+        // console.log(this.generateRandomNumber(100))
 
-        root.addEventListener('click', function(event){
+        // let interval = setInterval(() => {
+
+        //     if(this.emptyCeils.length === 0) clearInterval(interval);
+
+        //     console.log(this.emptyCeils)
+
+        //     const resFind = this.find(this.emptyCeils);
+
+        //     document.getElementById(resFind.elementId).classList.add('disactive')
+
+        //     return this.emptyCeils = resFind.arr;
+            
+        // }, 1000);
+
+
+
+
+        root.addEventListener('click', (event)=>{
             if(event.target.className.includes('row')) return false
             console.dir(event.target.id)
+            console.log(this.generateRandomNumber(100))
             event.target.classList.add('active')
         }, false)
 
