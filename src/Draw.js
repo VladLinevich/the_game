@@ -1,79 +1,134 @@
 class Draw {
 
     constructor(count = 3, mainElementId = 'root'){
-        this.count = count;
-        this.mainElementId = mainElementId;
-        this.emptyCeils = [];
+        this.cellsCount = count;
+        this.rootContainer = document.getElementById(mainElementId);
+        this.emptyCells = [];
+        this.moveTime = null;
+        this.nextCell = null;
+        this.score = {
+            player: 0,
+            computer: 0
+        };
+        this.timeForMove = 2000;
     }
 
-    drawElement(tag, className) {
-        const element = document.createElement(tag);
-        element.setAttribute('class', className)
-        return element
-    }
+    /**
+     * Game Create process
+     */
+    createGameView(){
 
-    generateRandomNumber(maxNumber){
-        return Math.floor(Math.random() * (maxNumber + 1));
-    }
-
-    find(arr){
-        let num = this.generateRandomNumber(arr.length);
-        console.log(num)
-        return {
-            elementId: num,
-            arr: arr.filter(id => id != num)
-        }
-    }
-
-    draw(){
-        const root = document.getElementById(this.mainElementId);
-
-        for(let rowCount = 0; rowCount < this.count; rowCount++){
+        for(let rowCount = 0; rowCount < this.cellsCount; rowCount++){
             const row = document.createElement('div');
             row.setAttribute('class', 'row')    
 
-            for(let ceilCount = 0; ceilCount < this.count; ceilCount++) {
-                const ceil = document.createElement('span');
-                ceil.setAttribute('class', 'ceil')   
-                row.appendChild(ceil)
+            for(let cellCount = 0; cellCount < this.cellsCount; cellCount++) {
+                const cell = document.createElement('span');
+                cell.setAttribute('class', 'cell')   
+                row.appendChild(cell)
             }
-           
-            root.appendChild(row)
+            this.rootContainer.appendChild(row)
         }
+    }
 
-        const ceils = [].slice.call(document.getElementsByClassName('ceil'))
-        ceils.map((ceil, index) => {
-            ceil.setAttribute('id', index);
-            this.emptyCeils.push(index)
+    fillEmptyCells(){
+        const cells = [].slice.call(document.getElementsByClassName('cell'))
+
+        cells.map((cell, index) => {
+            cell.setAttribute('id', index);
+            this.emptyCells.push(index)
         })
+    }
 
-        console.log(this.emptyCeils)
-        // console.log(this.generateRandomNumber(100))
-
-        // let interval = setInterval(() => {
-
-        //     if(this.emptyCeils.length === 0) clearInterval(interval);
-
-        //     console.log(this.emptyCeils)
-
-        //     const resFind = this.find(this.emptyCeils);
-
-        //     document.getElementById(resFind.elementId).classList.add('disactive')
-
-        //     return this.emptyCeils = resFind.arr;
-            
-        // }, 1000);
-
-
-
-
-        root.addEventListener('click', (event)=>{
+    addActionsForCells(){
+        this.rootContainer.addEventListener('click', (event)=>{
             if(event.target.className.includes('row')) return false
-            console.dir(event.target.id)
-            console.log(this.generateRandomNumber(100))
-            event.target.classList.add('active')
+            this.moveByPlayer(event.target.id)
         }, false)
+    }
 
+
+    setScore(playerSide){
+        this.score = {...this.score, [playerSide]: this.score[playerSide] += 1}
+    }
+
+
+    /**
+     * Interaction actions
+     */
+    generateRandomCellNumber(cells){
+        let generateNum = Math.floor( Math.random() * Math.floor(cells.length));
+        this.nextCell = cells[generateNum];   
+    }
+
+    updateEmptyCells(number, arr){
+        this.emptyCells = arr.filter((id) => id != number)
+    }
+
+    paintCell(cellNumber, paintStatusClass){
+        document.getElementById(cellNumber).classList.add(paintStatusClass)
+    }
+
+    /**
+     * Players actions
+     */
+    moveByComputer(cellNumber){
+        this.paintCell(cellNumber, 'disactive')
+        this.updateEmptyCells(cellNumber, this.emptyCells)
+        this.setScore('computer')
+        this.play()
+    }
+
+    moveByPlayer(cellNumber){
+        this.paintCell(cellNumber, 'active')
+        this.updateEmptyCells(cellNumber, this.emptyCells)
+        this.setScore('player')
+        this.nextStep()
+    }
+
+
+    /**
+     * Game flow actions
+     */
+    play() {
+        if(this.emptyCells.length === 0) return this.endGame();
+
+        this.generateRandomCellNumber(this.emptyCells);
+        this.paintCell(this.nextCell, 'hint')
+
+        this.moveTime = setTimeout(()=> {
+            this.moveByComputer(this.nextCell);  
+        }, this.timeForMove)
+    }
+
+    stop(){
+        return clearTimeout(this.moveTime);
+    }
+
+    nextStep(){
+       this.stop();
+       this.play() 
+    }
+
+    endGame(){
+        this.stop();
+        console.log(this.score)
+    }
+
+   
+    /**
+     * Game Start Actions
+     */
+    createGame(){
+        this.createGameView();
+        this.fillEmptyCells()
+        this.generateRandomCellNumber(this.emptyCells);
+        this.addActionsForCells()
+    }
+
+    playGame(timeForMove){
+        this.timeForMove = timeForMove
+        this.play()
     }
 
 }

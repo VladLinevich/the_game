@@ -1,15 +1,27 @@
-.ceil {
+.cell {
     width: 30px;
     height: 30px;
     border: 1px solid rgb(226, 226, 226);
+    pointer-events: none;
 }
 
-.ceil.active{
+.cell:hover{
+    cursor: pointer;
+}
+
+.cell.hint {
+    background-color: rgba(231, 228, 45, 0.637);
+    pointer-events: all;
+}
+
+.cell.active{
     background-color: rgba(212, 84, 41, 0.371);
+    pointer-events: none
 }
 
-.ceil.disactive {
+.cell.disactive {
     background-color: rgba(41, 144, 212, 0.371);
+    pointer-events: none
 }
 
 .row {

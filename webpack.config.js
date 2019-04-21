@@ -8,7 +8,7 @@ module.exports = {
     filename: 'index.bundle.js'
   },
 
-  mode: 'none',
+  mode: 'development',
 
   module: {
     rules: [
