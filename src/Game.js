@@ -1,11 +1,12 @@
-class Draw {
+class Game {
 
-    constructor(count = 3, mainElementId = 'root'){
-        this.cellsCount = count;
+    constructor(mainElementId = 'root'){
+        this.cellsCount = 3;
         this.rootContainer = document.getElementById(mainElementId);
         this.emptyCells = [];
         this.moveTime = null;
         this.nextCell = null;
+        this.cellElements = [];
         this.score = {
             player: 0,
             computer: 0
@@ -17,7 +18,6 @@ class Draw {
      * Game Create process
      */
     createGameView(){
-
         for(let rowCount = 0; rowCount < this.cellsCount; rowCount++){
             const row = document.createElement('div');
             row.setAttribute('class', 'row')    
@@ -29,12 +29,12 @@ class Draw {
             }
             this.rootContainer.appendChild(row)
         }
+
+        this.cellElements = [].slice.call(document.getElementsByClassName('cell'))
     }
 
     fillEmptyCells(){
-        const cells = [].slice.call(document.getElementsByClassName('cell'))
-
-        cells.map((cell, index) => {
+        this.cellElements.map((cell, index) => {
             cell.setAttribute('id', index);
             this.emptyCells.push(index)
         })
@@ -48,8 +48,15 @@ class Draw {
     }
 
 
-    setScore(playerSide){
-        this.score = {...this.score, [playerSide]: this.score[playerSide] += 1}
+    setScore(playerSide, score){
+        console.log(playerSide, score)
+        let result = typeof score != 'undefined' ? score : this.score[playerSide] += 1 
+
+        console.log(playerSide, result)
+        this.score = {...this.score, 
+                      [playerSide]: result}
+
+        document.getElementById(`${playerSide}Score`).innerText = this.score[playerSide];        
     }
 
 
@@ -91,7 +98,7 @@ class Draw {
      * Game flow actions
      */
     play() {
-        if(this.emptyCells.length === 0) return this.endGame();
+        if(this.score.player >= 3 || this.score.computer >= 3) return this.endGame();
 
         this.generateRandomCellNumber(this.emptyCells);
         this.paintCell(this.nextCell, 'hint')
@@ -110,14 +117,9 @@ class Draw {
        this.play() 
     }
 
-    endGame(){
-        this.stop();
-        console.log(this.score)
-    }
 
-   
     /**
-     * Game Start Actions
+     * Actions for start game
      */
     createGame(){
         this.createGameView();
@@ -126,11 +128,35 @@ class Draw {
         this.addActionsForCells()
     }
 
-    playGame(timeForMove){
+    playGame(timeForMove = 2000){
+        this.resetGame()
+
         this.timeForMove = timeForMove
         this.play()
     }
 
+    endGame(){
+        this.stop();
+        console.log(this.score)
+    }
+
+    resetGame(){
+
+        this.stop();
+        this.emptyCells = [];
+
+        this.cellElements.map((cell, index) => {
+            cell.setAttribute('class', 'cell');
+            this.emptyCells.push(index)
+        })
+
+        this.setScore('computer', 0)
+        this.setScore('player', 0)
+
+        
+        console.log(this.emptyCells)
+    }
+
 }
 
-export default Draw;
+export default Game;
