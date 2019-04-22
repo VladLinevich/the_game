@@ -5,19 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div id="root"></div>
-    <div class='score'>
-        <div class="score-line">Player <span id='playerScore'>0</span></div>
-        <div class="score-line">Computer <span id='computerScore'>0</span></div>
-    </div>
-    <div class='controll'>
-        <input id='time' value='2000' type="text">
-        <button id='start' >Start</button>
-        <button id='reset'>Reset</button>
-    </div>
-</body>
+    <div class='container'>
+
+        <div class='controll'>
+            <div class='controll-field'>
+                <input id='time' value='2000' type="text">
+                <span>Min time = 500, Max time = 20000</span>
+            </div>
+            <button class='game-btn' id='start' >Start</button>
+            <button class='game-btn reset' id='reset'>Reset</button>
+        </div>
+
+        <div id="root"></div>
+
+        <div class='score'>
+            <div class="score-line">Player <span id='playerScore'>0</span></div>
+            <div class="score-line">Computer <span id='computerScore'>0</span></div>
+        </div>
+
+        
+
+        <div class='modal-wrapper' id='modal'>
+            <div class='modal-inner'>
+                <h1 id='winner-text'></h1>
+                <button class='game-btn reset' id='modal-reset'>Close</button>
+            </div>
+        </div>
+     
+    </div>    
+
     <script src='index.bundle.js'></script>
+</body>
+
 </html>

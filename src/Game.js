@@ -1,12 +1,17 @@
+import Modal from './Modal';
+
+const winnerModal = new Modal();
+
 class Game {
 
     constructor(mainElementId = 'root'){
-        this.cellsCount = 3;
         this.rootContainer = document.getElementById(mainElementId);
+        this.cellsInOneSide = 10;
+        this.winnebleRate = 10;
         this.emptyCells = [];
+        this.cellElements = [];
         this.moveTime = null;
         this.nextCell = null;
-        this.cellElements = [];
         this.score = {
             player: 0,
             computer: 0
@@ -18,11 +23,11 @@ class Game {
      * Game Create process
      */
     createGameView(){
-        for(let rowCount = 0; rowCount < this.cellsCount; rowCount++){
+        for(let rowCount = 0; rowCount < this.cellsInOneSide; rowCount++){
             const row = document.createElement('div');
             row.setAttribute('class', 'row')    
 
-            for(let cellCount = 0; cellCount < this.cellsCount; cellCount++) {
+            for(let cellCount = 0; cellCount < this.cellsInOneSide; cellCount++) {
                 const cell = document.createElement('span');
                 cell.setAttribute('class', 'cell')   
                 row.appendChild(cell)
@@ -42,17 +47,15 @@ class Game {
 
     addActionsForCells(){
         this.rootContainer.addEventListener('click', (event)=>{
-            if(event.target.className.includes('row')) return false
+            if(!event.target.className || event.target.className.includes('row')) return false
             this.moveByPlayer(event.target.id)
         }, false)
     }
 
 
     setScore(playerSide, score){
-        console.log(playerSide, score)
-        let result = typeof score != 'undefined' ? score : this.score[playerSide] += 1 
+        const result = typeof score != 'undefined' ? score : this.score[playerSide] += 1 
 
-        console.log(playerSide, result)
         this.score = {...this.score, 
                       [playerSide]: result}
 
@@ -64,7 +67,7 @@ class Game {
      * Interaction actions
      */
     generateRandomCellNumber(cells){
-        let generateNum = Math.floor( Math.random() * Math.floor(cells.length));
+        const generateNum = Math.floor( Math.random() * Math.floor(cells.length));
         this.nextCell = cells[generateNum];   
     }
 
@@ -74,6 +77,14 @@ class Game {
 
     paintCell(cellNumber, paintStatusClass){
         document.getElementById(cellNumber).classList.add(paintStatusClass)
+    }
+
+    createWinnerText(){
+        const { player, computer} = this.score;
+        const winnerScoreText = `Computer: ${computer}. Your: ${player}`;
+
+        if(player > computer) return `You are win. ${winnerScoreText}`
+        else return `Compuner is win. ${winnerScoreText}`
     }
 
     /**
@@ -98,7 +109,7 @@ class Game {
      * Game flow actions
      */
     play() {
-        if(this.score.player >= 3 || this.score.computer >= 3) return this.endGame();
+        if(this.score.player >= this.winnebleRate || this.score.computer >= this.winnebleRate) return this.endGame();
 
         this.generateRandomCellNumber(this.emptyCells);
         this.paintCell(this.nextCell, 'hint')
@@ -137,7 +148,7 @@ class Game {
 
     endGame(){
         this.stop();
-        console.log(this.score)
+        winnerModal.open(this.createWinnerText())   
     }
 
     resetGame(){
@@ -153,8 +164,6 @@ class Game {
         this.setScore('computer', 0)
         this.setScore('player', 0)
 
-        
-        console.log(this.emptyCells)
     }
 
 }
