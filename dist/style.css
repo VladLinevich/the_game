@@ -26,7 +26,6 @@
     pointer-events: none;
     box-shadow: 3px 2px 8px 0px #dadada;
     pointer-events: none;
-    transition: .2s ease-out
 }
 
 .cell:hover{

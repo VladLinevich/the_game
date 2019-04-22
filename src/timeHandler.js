@@ -8,7 +8,7 @@ const timeHandler = (time) => {
         return false
     }
 
-    if(time < 500){
+    if(time < 700){
         modal.open('Time is too little')
         return false
     }
